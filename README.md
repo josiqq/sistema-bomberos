@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema de Administración de Equipos - Cuartel de Bomberos
 
-## Getting Started
+## Módulos del Sistema
 
-First, run the development server:
+### 1. **Módulo de Autenticación y Usuarios**
+- Login/Logout con roles diferenciados
+- Gestión de perfiles de usuario
+- Roles: Administrador, Jefe de Estación, Bombero, Técnico de Mantenimiento
+- Recuperación de contraseñas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 2. **Módulo de Inventario de Equipos**
+- **Equipos de Protección Personal (EPP)**
+  - Cascos, botas, trajes, guantes, máscaras
+  - Asignación por bombero
+  - Control de tallas y estados
+- **Equipos de Rescate**
+  - Herramientas de corte, separación y rescate
+  - Cuerdas, arneses, camillas
+  - Equipos de respiración autónoma (ERA)
+- **Vehículos y Maquinaria**
+  - Autobombas, ambulancias, vehículos de rescate
+  - Motobombas, generadores, escaleras
+- **Equipos de Comunicación**
+  - Radios, repetidores, sistemas de comunicación
+- **Equipos Médicos**
+  - Material de primeros auxilios
+  - Desfibriladores, equipos de soporte vital
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. **Módulo de Mantenimiento**
+- Programación de mantenimientos preventivos
+- Registro de mantenimientos correctivos
+- Alertas de vencimiento de mantenimientos
+- Historial completo por equipo
+- Asignación de técnicos responsables
+- Documentos y manuales de mantenimiento
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. **Módulo de Control de Estado**
+- Estados: Operativo, En mantenimiento, Fuera de servicio, En reparación
+- Alertas de equipos críticos fuera de servicio
+- Dashboard de disponibilidad general
+- Reportes de equipos por estado
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 5. **Módulo de Inspecciones y Certificaciones**
+- Programación de inspecciones periódicas
+- Registro de resultados de inspecciones
+- Control de certificaciones y vigencias
+- Alertas de vencimiento de certificaciones
+- Documentación fotográfica
 
-## Learn More
+### 6. **Módulo de Reportes y Analytics**
+- Reportes de inventario general
+- Estadísticas de uso y disponibilidad
+- Costos de mantenimiento
+- Reportes de cumplimiento normativo
+- Gráficos y dashboards ejecutivos
 
-To learn more about Next.js, take a look at the following resources:
+### 7. **Módulo de Asignaciones**
+- Asignación de equipos a bomberos específicos
+- Control de entrega y devolución
+- Responsabilidades por equipo
+- Historial de asignaciones
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 8. **Módulo de Alertas y Notificaciones**
+- Notificaciones push y email
+- Alertas de mantenimiento vencido
+- Equipos críticos fuera de servicio
+- Certificaciones próximas a vencer
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 9. **Módulo de Configuración**
+- Configuración de tipos de equipos
+- Parámetros del sistema
+- Configuración de alertas
+- Backup y restauración
