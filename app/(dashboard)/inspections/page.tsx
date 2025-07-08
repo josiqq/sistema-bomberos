@@ -37,8 +37,6 @@ import {
   User,
   MapPin,
 } from "lucide-react"
-import { Sidebar } from "@/components/layout/sidebar"
-import { Header } from "@/components/layout/header"
 import {
   ResponsiveContainer,
   BarChart,
@@ -308,424 +306,414 @@ export default function InspectionsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
-
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">Inspecciones y Certificaciones</h1>
-                  <p className="text-gray-600">Gestión integral de inspecciones y cumplimiento normativo</p>
-                </div>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Programar Inspección
-                </Button>
-              </div>
-            </div>
-
-            {/* Metrics Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="border-l-4 border-l-blue-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Pendientes Este Mes</p>
-                      <p className="text-3xl font-bold text-blue-600">{inspectionMetrics.pendingThisMonth}</p>
-                    </div>
-                    <SearchCheck className="h-8 w-8 text-blue-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-yellow-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Certificaciones por Vencer</p>
-                      <p className="text-3xl font-bold text-yellow-600">{inspectionMetrics.certificationsExpiring}</p>
-                    </div>
-                    <Award className="h-8 w-8 text-yellow-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-green-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Cumplimiento General</p>
-                      <p className="text-3xl font-bold text-green-600">{inspectionMetrics.overallCompliance}%</p>
-                    </div>
-                    <CheckSquare className="h-8 w-8 text-green-600" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-l-red-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Inspecciones Vencidas</p>
-                      <p className="text-3xl font-bold text-red-600">{inspectionMetrics.overdueInspections}</p>
-                    </div>
-                    <AlertTriangle className="h-8 w-8 text-red-600" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Tabs defaultValue="calendar" className="space-y-6">
-              <TabsList>
-                <TabsTrigger value="calendar">Calendario</TabsTrigger>
-                <TabsTrigger value="pending">Pendientes</TabsTrigger>
-                <TabsTrigger value="completed">Completadas</TabsTrigger>
-                <TabsTrigger value="certifications">Certificaciones</TabsTrigger>
-                <TabsTrigger value="analytics">Análisis</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="calendar" className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                  {/* Calendar */}
-                  <Card className="lg:col-span-1">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <CalendarIcon className="h-5 w-5" />
-                        Calendario
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
-                        className="rounded-md border"
-                      />
-                    </CardContent>
-                  </Card>
-
-                  {/* Scheduled Inspections */}
-                  <Card className="lg:col-span-3">
-                    <CardHeader>
-                      <CardTitle>Inspecciones Programadas</CardTitle>
-                      <CardDescription>
-                        {selectedDate
-                          ? `Inspecciones para ${selectedDate.toLocaleDateString()}`
-                          : "Próximas inspecciones"}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {upcomingInspections.map((inspection) => {
-                          const typeConfig = getInspectionTypeConfig(inspection.inspectionType)
-                          const IconComponent = typeConfig.icon
-                          return (
-                            <div
-                              key={inspection.id}
-                              className="flex items-center justify-between p-4 border rounded-lg"
-                            >
-                              <div className="flex items-center gap-4">
-                                <div
-                                  className={`w-12 h-12 bg-${typeConfig.color}-100 rounded-lg flex items-center justify-center`}
-                                >
-                                  <IconComponent className={`h-6 w-6 text-${typeConfig.color}-600`} />
-                                </div>
-                                <div>
-                                  <p className="font-medium">{inspection.equipmentName}</p>
-                                  <p className="text-sm text-gray-500">{typeConfig.name}</p>
-                                  <div className="flex items-center gap-4 mt-1">
-                                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                                      <CalendarIcon className="h-3 w-3" />
-                                      {new Date(inspection.scheduledDate).toLocaleDateString()}
-                                    </div>
-                                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                                      <Clock className="h-3 w-3" />
-                                      {inspection.estimatedDuration} min
-                                    </div>
-                                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                                      <User className="h-3 w-3" />
-                                      {inspection.inspectorName}
-                                    </div>
-                                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                                      <MapPin className="h-3 w-3" />
-                                      {inspection.location}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Badge className={getPriorityColor(inspection.priority)}>{inspection.priority}</Badge>
-                                <Badge className={getStatusColor(inspection.status)}>{inspection.status}</Badge>
-                                <Dialog>
-                                  <DialogTrigger asChild>
-                                    <Button variant="outline" size="sm">
-                                      <Eye className="h-4 w-4" />
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent className="max-w-2xl">
-                                    <DialogHeader>
-                                      <DialogTitle>Ejecutar Inspección</DialogTitle>
-                                      <DialogDescription>
-                                        {typeConfig.name} - {inspection.equipmentName}
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <InspectionExecutionForm inspection={inspection} typeConfig={typeConfig} />
-                                  </DialogContent>
-                                </Dialog>
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="pending" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Inspecciones Pendientes</CardTitle>
-                    <CardDescription>Inspecciones programadas que requieren ejecución</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Equipo</TableHead>
-                            <TableHead>Tipo de Inspección</TableHead>
-                            <TableHead>Fecha Programada</TableHead>
-                            <TableHead>Inspector</TableHead>
-                            <TableHead>Prioridad</TableHead>
-                            <TableHead>Estado</TableHead>
-                            <TableHead>Acciones</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {upcomingInspections.map((inspection) => {
-                            const typeConfig = getInspectionTypeConfig(inspection.inspectionType)
-                            return (
-                              <TableRow key={inspection.id}>
-                                <TableCell>
-                                  <div>
-                                    <p className="font-medium">{inspection.equipmentName}</p>
-                                    <p className="text-sm text-gray-500">{inspection.equipmentId}</p>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <typeConfig.icon className="h-4 w-4" />
-                                    {typeConfig.name}
-                                  </div>
-                                </TableCell>
-                                <TableCell>{new Date(inspection.scheduledDate).toLocaleDateString()}</TableCell>
-                                <TableCell>{inspection.inspectorName}</TableCell>
-                                <TableCell>
-                                  <Badge className={getPriorityColor(inspection.priority)}>{inspection.priority}</Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge className={getStatusColor(inspection.status)}>{inspection.status}</Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <Button variant="ghost" size="sm">
-                                      <Eye className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="sm">
-                                      <Edit className="h-4 w-4" />
-                                    </Button>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            )
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="completed" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Inspecciones Completadas</CardTitle>
-                    <CardDescription>Historial de inspecciones realizadas</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8 text-gray-500">
-                      <SearchCheck className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No hay inspecciones completadas para mostrar</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="certifications" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Gestión de Certificaciones</CardTitle>
-                    <CardDescription>Control de certificaciones y documentos oficiales</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Equipo</TableHead>
-                            <TableHead>Tipo de Certificación</TableHead>
-                            <TableHead>Número</TableHead>
-                            <TableHead>Fecha de Emisión</TableHead>
-                            <TableHead>Fecha de Vencimiento</TableHead>
-                            <TableHead>Estado</TableHead>
-                            <TableHead>Autoridad</TableHead>
-                            <TableHead>Acciones</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {certifications.map((cert) => (
-                            <TableRow key={cert.id}>
-                              <TableCell>
-                                <div>
-                                  <p className="font-medium">{cert.equipmentName}</p>
-                                  <p className="text-sm text-gray-500">{cert.equipmentId}</p>
-                                </div>
-                              </TableCell>
-                              <TableCell>{cert.certificationType}</TableCell>
-                              <TableCell className="font-mono text-sm">{cert.certificateNumber}</TableCell>
-                              <TableCell>{new Date(cert.issuedDate).toLocaleDateString()}</TableCell>
-                              <TableCell>{new Date(cert.expiryDate).toLocaleDateString()}</TableCell>
-                              <TableCell>
-                                <Badge className={getCertificationStatusColor(cert.status)}>
-                                  {cert.status === "active" && "Vigente"}
-                                  {cert.status === "expiring" && "Por Vencer"}
-                                  {cert.status === "expired" && "Vencida"}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-sm">{cert.issuingAuthority}</TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Button variant="ghost" size="sm">
-                                    <Eye className="h-4 w-4" />
-                                  </Button>
-                                  <Button variant="ghost" size="sm">
-                                    <Download className="h-4 w-4" />
-                                  </Button>
-                                  {cert.status === "expiring" || cert.status === "expired" ? (
-                                    <Button variant="ghost" size="sm" className="text-blue-600">
-                                      Renovar
-                                    </Button>
-                                  ) : null}
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="analytics" className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Compliance by Type */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Cumplimiento por Tipo de Equipo</CardTitle>
-                      <CardDescription>Porcentaje de cumplimiento de inspecciones</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={complianceByType}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="type" />
-                            <YAxis />
-                            <Tooltip formatter={(value) => `${value}%`} />
-                            <Bar dataKey="compliance" fill="#3b82f6" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Inspection Trend */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Tendencia de Inspecciones</CardTitle>
-                      <CardDescription>Inspecciones programadas vs completadas</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={inspectionTrend}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="month" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line type="monotone" dataKey="scheduled" stroke="#f59e0b" name="Programadas" />
-                            <Line type="monotone" dataKey="completed" stroke="#10b981" name="Completadas" />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Inspection Types Overview */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Tipos de Inspección Configurados</CardTitle>
-                    <CardDescription>Configuración de tipos de inspección y sus frecuencias</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {inspectionTypes.map((type) => {
-                        const IconComponent = type.icon
-                        return (
-                          <Card key={type.id} className="p-4">
-                            <div className="flex items-center gap-3 mb-3">
-                              <div
-                                className={`w-10 h-10 bg-${type.color}-100 rounded-lg flex items-center justify-center`}
-                              >
-                                <IconComponent className={`h-5 w-5 text-${type.color}-600`} />
-                              </div>
-                              <div>
-                                <h4 className="font-medium">{type.name}</h4>
-                                <p className="text-sm text-gray-500">Cada {type.frequency} días</p>
-                              </div>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-3">{type.description}</p>
-                            <div className="space-y-1">
-                              <p className="text-xs font-medium text-gray-700">Checklist:</p>
-                              {type.checklist.slice(0, 2).map((item, index) => (
-                                <p key={index} className="text-xs text-gray-500">
-                                  • {item}
-                                </p>
-                              ))}
-                              {type.checklist.length > 2 && (
-                                <p className="text-xs text-gray-400">+{type.checklist.length - 2} más...</p>
-                              )}
-                            </div>
-                          </Card>
-                        )
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Inspecciones y Certificaciones</h1>
+            <p className="text-gray-600">Gestión integral de inspecciones y cumplimiento normativo</p>
           </div>
-        </main>
+          <Button className="bg-blue-600 hover:bg-blue-700">
+            <Plus className="h-4 w-4 mr-2" />
+            Programar Inspección
+          </Button>
+        </div>
       </div>
+
+      {/* Metrics Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card className="border-l-4 border-l-blue-500">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Pendientes Este Mes</p>
+                <p className="text-3xl font-bold text-blue-600">{inspectionMetrics.pendingThisMonth}</p>
+              </div>
+              <SearchCheck className="h-8 w-8 text-blue-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-yellow-500">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Certificaciones por Vencer</p>
+                <p className="text-3xl font-bold text-yellow-600">{inspectionMetrics.certificationsExpiring}</p>
+              </div>
+              <Award className="h-8 w-8 text-yellow-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-green-500">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Cumplimiento General</p>
+                <p className="text-3xl font-bold text-green-600">{inspectionMetrics.overallCompliance}%</p>
+              </div>
+              <CheckSquare className="h-8 w-8 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-red-500">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Inspecciones Vencidas</p>
+                <p className="text-3xl font-bold text-red-600">{inspectionMetrics.overdueInspections}</p>
+              </div>
+              <AlertTriangle className="h-8 w-8 text-red-600" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="calendar" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="calendar">Calendario</TabsTrigger>
+          <TabsTrigger value="pending">Pendientes</TabsTrigger>
+          <TabsTrigger value="completed">Completadas</TabsTrigger>
+          <TabsTrigger value="certifications">Certificaciones</TabsTrigger>
+          <TabsTrigger value="analytics">Análisis</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="calendar" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Calendar */}
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5" />
+                  Calendario
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="rounded-md border"
+                />
+              </CardContent>
+            </Card>
+
+            {/* Scheduled Inspections */}
+            <Card className="lg:col-span-3">
+              <CardHeader>
+                <CardTitle>Inspecciones Programadas</CardTitle>
+                <CardDescription>
+                  {selectedDate
+                    ? `Inspecciones para ${selectedDate.toLocaleDateString()}`
+                    : "Próximas inspecciones"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {upcomingInspections.map((inspection) => {
+                    const typeConfig = getInspectionTypeConfig(inspection.inspectionType)
+                    const IconComponent = typeConfig.icon
+                    return (
+                      <div
+                        key={inspection.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`w-12 h-12 bg-${typeConfig.color}-100 rounded-lg flex items-center justify-center`}
+                          >
+                            <IconComponent className={`h-6 w-6 text-${typeConfig.color}-600`} />
+                          </div>
+                          <div>
+                            <p className="font-medium">{inspection.equipmentName}</p>
+                            <p className="text-sm text-gray-500">{typeConfig.name}</p>
+                            <div className="flex items-center gap-4 mt-1">
+                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <CalendarIcon className="h-3 w-3" />
+                                {new Date(inspection.scheduledDate).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <Clock className="h-3 w-3" />
+                                {inspection.estimatedDuration} min
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <User className="h-3 w-3" />
+                                {inspection.inspectorName}
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <MapPin className="h-3 w-3" />
+                                {inspection.location}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className={getPriorityColor(inspection.priority)}>{inspection.priority}</Badge>
+                          <Badge className={getStatusColor(inspection.status)}>{inspection.status}</Badge>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl">
+                              <DialogHeader>
+                                <DialogTitle>Ejecutar Inspección</DialogTitle>
+                                <DialogDescription>
+                                  {typeConfig.name} - {inspection.equipmentName}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <InspectionExecutionForm inspection={inspection} typeConfig={typeConfig} />
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="pending" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Inspecciones Pendientes</CardTitle>
+              <CardDescription>Inspecciones programadas que requieren ejecución</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Equipo</TableHead>
+                      <TableHead>Tipo de Inspección</TableHead>
+                      <TableHead>Fecha Programada</TableHead>
+                      <TableHead>Inspector</TableHead>
+                      <TableHead>Prioridad</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead>Acciones</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {upcomingInspections.map((inspection) => {
+                      const typeConfig = getInspectionTypeConfig(inspection.inspectionType)
+                      return (
+                        <TableRow key={inspection.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{inspection.equipmentName}</p>
+                              <p className="text-sm text-gray-500">{inspection.equipmentId}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <typeConfig.icon className="h-4 w-4" />
+                              {typeConfig.name}
+                            </div>
+                          </TableCell>
+                          <TableCell>{new Date(inspection.scheduledDate).toLocaleDateString()}</TableCell>
+                          <TableCell>{inspection.inspectorName}</TableCell>
+                          <TableCell>
+                            <Badge className={getPriorityColor(inspection.priority)}>{inspection.priority}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={getStatusColor(inspection.status)}>{inspection.status}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button variant="outline" size="sm">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="completed" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Inspecciones Completadas</CardTitle>
+              <CardDescription>Historial de inspecciones realizadas</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-gray-500">
+                <SearchCheck className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No hay inspecciones completadas para mostrar</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="certifications" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestión de Certificaciones</CardTitle>
+              <CardDescription>Control de certificaciones y documentos oficiales</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Equipo</TableHead>
+                      <TableHead>Tipo de Certificación</TableHead>
+                      <TableHead>Número</TableHead>
+                      <TableHead>Fecha de Emisión</TableHead>
+                      <TableHead>Fecha de Vencimiento</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead>Autoridad</TableHead>
+                      <TableHead>Acciones</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {certifications.map((cert) => (
+                      <TableRow key={cert.id}>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium">{cert.equipmentName}</p>
+                            <p className="text-sm text-gray-500">{cert.equipmentId}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>{cert.certificationType}</TableCell>
+                        <TableCell className="font-mono text-sm">{cert.certificateNumber}</TableCell>
+                        <TableCell>{new Date(cert.issuedDate).toLocaleDateString()}</TableCell>
+                        <TableCell>{new Date(cert.expiryDate).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Badge className={getCertificationStatusColor(cert.status)}>
+                            {cert.status === "active" && "Vigente"}
+                            {cert.status === "expiring" && "Por Vencer"}
+                            {cert.status === "expired" && "Vencida"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">{cert.issuingAuthority}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                            {cert.status === "expiring" || cert.status === "expired" ? (
+                              <Button variant="outline" size="sm" className="text-blue-600">
+                                Renovar
+                              </Button>
+                            ) : null}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Compliance by Type */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Cumplimiento por Tipo de Equipo</CardTitle>
+                <CardDescription>Porcentaje de cumplimiento de inspecciones</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={complianceByType}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="type" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => `${value}%`} />
+                      <Bar dataKey="compliance" fill="#3b82f6" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Inspection Trend */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Tendencia de Inspecciones</CardTitle>
+                <CardDescription>Inspecciones programadas vs completadas</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={inspectionTrend}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="scheduled" stroke="#f59e0b" name="Programadas" />
+                      <Line type="monotone" dataKey="completed" stroke="#10b981" name="Completadas" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Inspection Types Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Tipos de Inspección Configurados</CardTitle>
+              <CardDescription>Configuración de tipos de inspección y sus frecuencias</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {inspectionTypes.map((type) => {
+                  const IconComponent = type.icon
+                  return (
+                    <Card key={type.id} className="p-4">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div
+                          className={`w-10 h-10 bg-${type.color}-100 rounded-lg flex items-center justify-center`}
+                        >
+                          <IconComponent className={`h-5 w-5 text-${type.color}-600`} />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">{type.name}</h4>
+                          <p className="text-sm text-gray-500">Cada {type.frequency} días</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">{type.description}</p>
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-gray-700">Checklist:</p>
+                        {type.checklist.slice(0, 2).map((item, index) => (
+                          <p key={index} className="text-xs text-gray-500">
+                            • {item}
+                          </p>
+                        ))}
+                        {type.checklist.length > 2 && (
+                          <p className="text-xs text-gray-400">+{type.checklist.length - 2} más...</p>
+                        )}
+                      </div>
+                    </Card>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
@@ -812,7 +800,7 @@ function InspectionExecutionForm({
                     rows={2}
                   />
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" size="sm">
                   <Camera className="h-4 w-4" />
                 </Button>
               </div>

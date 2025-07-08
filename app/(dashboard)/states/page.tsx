@@ -36,8 +36,6 @@ import {
   Edit,
   Eye,
 } from "lucide-react"
-import { Sidebar } from "@/components/layout/sidebar"
-import { Header } from "@/components/layout/header"
 import {
   ResponsiveContainer,
   PieChart,
@@ -290,7 +288,6 @@ const mockEquipmentByState = {
 }
 
 export default function StatesPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState("all")
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null)
   const [stateChangeModal, setStateChangeModal] = useState(false)
@@ -342,322 +339,314 @@ export default function StatesPage() {
   )
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
-
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Control de Estados</h1>
-              <p className="text-gray-600">Monitoreo en tiempo real del estado operativo de equipos</p>
-            </div>
-
-            {/* State Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {equipmentStates.map((state) => {
-                const IconComponent = state.icon
-                return (
-                  <Card
-                    key={state.id}
-                    className={`border-l-4 border-l-${state.color}-500 hover:shadow-lg transition-shadow cursor-pointer`}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">{state.name}</p>
-                          <p className={`text-3xl font-bold text-${state.color}-600`}>{state.count}</p>
-                          <div className="flex items-center mt-2">
-                            <span className="text-sm text-gray-500">{state.percentage}% del total</span>
-                            {getTrendIcon(state.trend)}
-                          </div>
-                        </div>
-                        <div className={`w-12 h-12 bg-${state.color}-100 rounded-lg flex items-center justify-center`}>
-                          <IconComponent className={`h-6 w-6 text-${state.color}-600`} />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-              {/* State Distribution Chart */}
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle>Distribución de Estados</CardTitle>
-                  <CardDescription>Estado actual de todos los equipos</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          dataKey="value"
-                          data={stateDistributionData}
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={80}
-                          label={({ name, percent }) => {
-                            const percentage = percent ? (percent * 100).toFixed(0) : "0";
-                            return `${name} ${percentage}%`;
-                          }}
-                        >
-                          {stateDistributionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Critical Alerts */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
-                    Alertas Críticas
-                  </CardTitle>
-                  <CardDescription>Equipos que requieren atención inmediata</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {criticalAlerts.slice(0, 3).map((alert) => (
-                      <div key={alert.id} className="p-3 border rounded-lg">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <p className="font-medium text-sm">{alert.equipmentName}</p>
-                            <p className="text-xs text-gray-500">{alert.equipmentId}</p>
-                            <p className="text-xs text-gray-600 mt-1">{alert.reason}</p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge className={getImpactColor(alert.impact)} variant="outline">
-                                {alert.impact}
-                              </Badge>
-                              <span className="text-xs text-gray-500">{alert.timeInStatus}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* State Trend Chart */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>Tendencia de Estados (Últimos 7 días)</CardTitle>
-                <CardDescription>Evolución del estado de equipos en la semana</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={stateTrendData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="day" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="operational" stroke="#10b981" name="Operativo" />
-                      <Line type="monotone" dataKey="maintenance" stroke="#f59e0b" name="Mantenimiento" />
-                      <Line type="monotone" dataKey="outOfService" stroke="#ef4444" name="Fuera de Servicio" />
-                      <Line type="monotone" dataKey="repair" stroke="#3b82f6" name="Reparación" />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Equipment by State */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Equipos por Estado</CardTitle>
-                <CardDescription>Vista detallada de equipos según su estado operativo</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-                  <div className="flex items-center justify-between mb-4">
-                    <TabsList>
-                      <TabsTrigger value="all">Todos ({mockEquipmentByState.all.length})</TabsTrigger>
-                      <TabsTrigger value="operational">
-                        Operativos ({mockEquipmentByState.operational.length})
-                      </TabsTrigger>
-                      <TabsTrigger value="maintenance">
-                        Mantenimiento ({mockEquipmentByState.maintenance.length})
-                      </TabsTrigger>
-                      <TabsTrigger value="out-of-service">
-                        Fuera de Servicio ({mockEquipmentByState["out-of-service"].length})
-                      </TabsTrigger>
-                      <TabsTrigger value="repair">Reparación ({mockEquipmentByState.repair.length})</TabsTrigger>
-                    </TabsList>
-
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <Input
-                          placeholder="Buscar equipos..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                          className="pl-10 w-64"
-                        />
-                      </div>
-                      <Button variant="outline" size="sm">
-                        <Filter className="h-4 w-4 mr-2" />
-                        Filtros
-                      </Button>
-                    </div>
-                  </div>
-
-                  <TabsContent value={selectedTab}>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Estado</TableHead>
-                            <TableHead>Código</TableHead>
-                            <TableHead>Nombre</TableHead>
-                            <TableHead>Tipo</TableHead>
-                            <TableHead>Tiempo en Estado</TableHead>
-                            <TableHead>Motivo/Observaciones</TableHead>
-                            <TableHead>Responsable</TableHead>
-                            <TableHead>Acciones</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredEquipment.map((equipment) => {
-                            const StateIcon = getStateIcon(equipment.status)
-                            return (
-                              <TableRow key={equipment.id}>
-                                <TableCell>
-                                  <Badge
-                                    className={`bg-${getStateColor(equipment.status)}-100 text-${getStateColor(equipment.status)}-800 border-${getStateColor(equipment.status)}-200`}
-                                  >
-                                    <div className="flex items-center gap-1">
-                                      <StateIcon className="h-3 w-3" />
-                                      {getStateName(equipment.status)}
-                                    </div>
-                                  </Badge>
-                                </TableCell>
-                                <TableCell className="font-medium">{equipment.id}</TableCell>
-                                <TableCell>{equipment.name}</TableCell>
-                                <TableCell>
-                                  <Badge variant="outline">{equipment.type}</Badge>
-                                </TableCell>
-                                <TableCell>{equipment.timeInStatus}</TableCell>
-                                <TableCell className="max-w-xs truncate">{equipment.reason}</TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <User className="h-4 w-4 text-gray-400" />
-                                    <span className="text-sm">{equipment.responsible}</span>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <Dialog>
-                                      <DialogTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() => setSelectedEquipment(equipment)}
-                                        >
-                                          <Edit className="h-4 w-4" />
-                                        </Button>
-                                      </DialogTrigger>
-                                      <DialogContent className="max-w-md">
-                                        <DialogHeader>
-                                          <DialogTitle>Cambiar Estado</DialogTitle>
-                                          <DialogDescription>
-                                            Cambiar el estado operativo de {equipment.name}
-                                          </DialogDescription>
-                                        </DialogHeader>
-                                        <StateChangeForm equipment={equipment} />
-                                      </DialogContent>
-                                    </Dialog>
-                                    <Button variant="ghost" size="sm">
-                                      <Eye className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="sm">
-                                      <History className="h-4 w-4" />
-                                    </Button>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            )
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-
-            {/* State Change History */}
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  Historial de Cambios de Estado
-                </CardTitle>
-                <CardDescription>Registro cronológico de cambios de estado recientes</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {stateHistory.map((change) => (
-                    <div key={change.id} className="flex items-start gap-4 p-4 border rounded-lg">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <History className="h-5 w-5 text-blue-600" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <p className="font-medium">{change.equipmentName}</p>
-                          <Badge variant="outline">{change.equipmentId}</Badge>
-                          <div className="flex items-center gap-1">
-                            <Badge
-                              className={`bg-${getStateColor(change.fromState)}-100 text-${getStateColor(change.fromState)}-800`}
-                            >
-                              {getStateName(change.fromState)}
-                            </Badge>
-                            <span className="text-gray-400">→</span>
-                            <Badge
-                              className={`bg-${getStateColor(change.toState)}-100 text-${getStateColor(change.toState)}-800`}
-                            >
-                              {getStateName(change.toState)}
-                            </Badge>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2">{change.reason}</p>
-                        {change.observations && <p className="text-xs text-gray-500 mb-2">{change.observations}</p>}
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <User className="h-3 w-3" />
-                            {change.changedBy}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {new Date(change.changedAt).toLocaleString()}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            Duración: {change.duration}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </main>
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Control de Estados</h1>
+        <p className="text-gray-600">Monitoreo en tiempo real del estado operativo de equipos</p>
       </div>
+
+      {/* State Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {equipmentStates.map((state) => {
+          const IconComponent = state.icon
+          return (
+            <Card
+              key={state.id}
+              className={`border-l-4 border-l-${state.color}-500 hover:shadow-lg transition-shadow cursor-pointer`}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">{state.name}</p>
+                    <p className={`text-3xl font-bold text-${state.color}-600`}>{state.count}</p>
+                    <div className="flex items-center mt-2">
+                      <span className="text-sm text-gray-500">{state.percentage}% del total</span>
+                      {getTrendIcon(state.trend)}
+                    </div>
+                  </div>
+                  <div className={`w-12 h-12 bg-${state.color}-100 rounded-lg flex items-center justify-center`}>
+                    <IconComponent className={`h-6 w-6 text-${state.color}-600`} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* State Distribution Chart */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Distribución de Estados</CardTitle>
+            <CardDescription>Estado actual de todos los equipos</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    dataKey="value"
+                    data={stateDistributionData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    label={({ name, percent }) => {
+                      const percentage = percent ? (percent * 100).toFixed(0) : "0";
+                      return `${name} ${percentage}%`;
+                    }}
+                  >
+                    {stateDistributionData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Critical Alerts */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+              Alertas Críticas
+            </CardTitle>
+            <CardDescription>Equipos que requieren atención inmediata</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {criticalAlerts.slice(0, 3).map((alert) => (
+                <div key={alert.id} className="p-3 border rounded-lg">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">{alert.equipmentName}</p>
+                      <p className="text-xs text-gray-500">{alert.equipmentId}</p>
+                      <p className="text-xs text-gray-600 mt-1">{alert.reason}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge className={getImpactColor(alert.impact)} variant="outline">
+                          {alert.impact}
+                        </Badge>
+                        <span className="text-xs text-gray-500">{alert.timeInStatus}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* State Trend Chart */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Tendencia de Estados (Últimos 7 días)</CardTitle>
+          <CardDescription>Evolución del estado de equipos en la semana</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={stateTrendData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="operational" stroke="#10b981" name="Operativo" />
+                <Line type="monotone" dataKey="maintenance" stroke="#f59e0b" name="Mantenimiento" />
+                <Line type="monotone" dataKey="outOfService" stroke="#ef4444" name="Fuera de Servicio" />
+                <Line type="monotone" dataKey="repair" stroke="#3b82f6" name="Reparación" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Equipment by State */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Equipos por Estado</CardTitle>
+          <CardDescription>Vista detallada de equipos según su estado operativo</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+            <div className="flex items-center justify-between mb-4">
+              <TabsList>
+                <TabsTrigger value="all">Todos ({mockEquipmentByState.all.length})</TabsTrigger>
+                <TabsTrigger value="operational">
+                  Operativos ({mockEquipmentByState.operational.length})
+                </TabsTrigger>
+                <TabsTrigger value="maintenance">
+                  Mantenimiento ({mockEquipmentByState.maintenance.length})
+                </TabsTrigger>
+                <TabsTrigger value="out-of-service">
+                  Fuera de Servicio ({mockEquipmentByState["out-of-service"].length})
+                </TabsTrigger>
+                <TabsTrigger value="repair">Reparación ({mockEquipmentByState.repair.length})</TabsTrigger>
+              </TabsList>
+
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Buscar equipos..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-64"
+                  />
+                </div>
+                <Button variant="outline" size="sm">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filtros
+                </Button>
+              </div>
+            </div>
+
+            <TabsContent value={selectedTab}>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Estado</TableHead>
+                      <TableHead>Código</TableHead>
+                      <TableHead>Nombre</TableHead>
+                      <TableHead>Tipo</TableHead>
+                      <TableHead>Tiempo en Estado</TableHead>
+                      <TableHead>Motivo/Observaciones</TableHead>
+                      <TableHead>Responsable</TableHead>
+                      <TableHead>Acciones</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredEquipment.map((equipment) => {
+                      const StateIcon = getStateIcon(equipment.status)
+                      return (
+                        <TableRow key={equipment.id}>
+                          <TableCell>
+                            <Badge
+                              className={`bg-${getStateColor(equipment.status)}-100 text-${getStateColor(equipment.status)}-800 border-${getStateColor(equipment.status)}-200`}
+                            >
+                              <div className="flex items-center gap-1">
+                                <StateIcon className="h-3 w-3" />
+                                {getStateName(equipment.status)}
+                              </div>
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="font-medium">{equipment.id}</TableCell>
+                          <TableCell>{equipment.name}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{equipment.type}</Badge>
+                          </TableCell>
+                          <TableCell>{equipment.timeInStatus}</TableCell>
+                          <TableCell className="max-w-xs truncate">{equipment.reason}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <User className="h-4 w-4 text-gray-400" />
+                              <span className="text-sm">{equipment.responsible}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setSelectedEquipment(equipment)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-md">
+                                  <DialogHeader>
+                                    <DialogTitle>Cambiar Estado</DialogTitle>
+                                    <DialogDescription>
+                                      Cambiar el estado operativo de {equipment.name}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <StateChangeForm equipment={equipment} />
+                                </DialogContent>
+                              </Dialog>
+                              <Button variant="outline" size="sm">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                <History className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* State Change History */}
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <History className="h-5 w-5" />
+            Historial de Cambios de Estado
+          </CardTitle>
+          <CardDescription>Registro cronológico de cambios de estado recientes</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {stateHistory.map((change) => (
+              <div key={change.id} className="flex items-start gap-4 p-4 border rounded-lg">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <History className="h-5 w-5 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="font-medium">{change.equipmentName}</p>
+                    <Badge variant="default">{change.equipmentId}</Badge>
+                    <div className="flex items-center gap-1">
+                      <Badge
+                        className={`bg-${getStateColor(change.fromState)}-100 text-${getStateColor(change.fromState)}-800`}
+                      >
+                        {getStateName(change.fromState)}
+                      </Badge>
+                      <span className="text-gray-400">→</span>
+                      <Badge
+                        className={`bg-${getStateColor(change.toState)}-100 text-${getStateColor(change.toState)}-800`}
+                      >
+                        {getStateName(change.toState)}
+                      </Badge>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">{change.reason}</p>
+                  {change.observations && <p className="text-xs text-gray-500 mb-2">{change.observations}</p>}
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <div className="flex items-center gap-1">
+                      <User className="h-3 w-3" />
+                      {change.changedBy}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {/** format date */
+                       change.changedAt.toString().split("T")[0]
+                      }
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      Duración: {change.duration}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
@@ -736,7 +725,7 @@ function StateChangeForm({ equipment }: { equipment: any }) {
       </div>
 
       <div className="flex justify-end gap-2 pt-4">
-        <Button variant="outline">Cancelar</Button>
+        <Button variant="default">Cancelar</Button>
         <Button disabled={!newState || !reason}>Cambiar Estado</Button>
       </div>
     </div>

@@ -1,17 +1,13 @@
 "use client"
 
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { AlertTriangle, CheckCircle, Clock, XCircle, Plus, Calendar, BarChart3, Users } from "lucide-react"
-import { Sidebar } from "@/components/layout/sidebar"
-import { Header } from "@/components/layout/header"
 import { equipmentData, maintenanceData } from "@/lib/data"
 
 export default function Dashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Calculate metrics
   const totalEquipment = equipmentData.length
@@ -25,13 +21,7 @@ export default function Dashboard() {
   const operationalPercentage = (operationalEquipment / totalEquipment) * 100
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
-
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Panel de Control</h1>
@@ -209,8 +199,6 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
+
   )
 }
