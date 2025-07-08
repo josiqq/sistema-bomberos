@@ -32,6 +32,45 @@ export interface Assignment {
   observations?: string
 }
 
+export const users = [
+  {
+    id: "1",
+    name: "José García",
+    email: "jose.garcia@cuartel.com",
+    role: "admin",
+    password: "password123", // NOTA: Las contraseñas deben estar hasheadas en una aplicación real
+    status: "active",
+    lastAccess: "2024-06-20T10:30:00Z",
+  },
+  {
+    id: "2",
+    name: "María López",
+    email: "maria.lopez@cuartel.com",
+    role: "chief",
+    password: "password123",
+    status: "active",
+    lastAccess: "2024-06-20T09:15:00Z",
+  },
+  {
+    id: "3",
+    name: "Carlos Ruiz",
+    email: "carlos.ruiz@cuartel.com",
+    role: "firefighter",
+    password: "password123",
+    status: "active",
+    lastAccess: "2024-06-19T16:45:00Z",
+  },
+  {
+    id: "4",
+    name: "Ana Martínez",
+    email: "ana.martinez@cuartel.com",
+    role: "technician",
+    password: "password123",
+    status: "active",
+    lastAccess: "2024-06-20T08:00:00Z",
+  },
+];
+
 export const equipmentData: Equipment[] = [
   {
     id: "EPP-001",
