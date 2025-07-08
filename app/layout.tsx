@@ -11,7 +11,9 @@ const archivo = Archivo({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: "Sistema de Gestión - Cuartel de Bomberos",
   description: "Sistema integral para la administración de equipos y recursos del cuartel de bomberos",
-  generator: 'v0.dev'
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({

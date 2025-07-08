@@ -581,7 +581,7 @@ export default function ReportsPage() {
                         </div>
                         <div>
                           <CardTitle className="text-lg">{report.title}</CardTitle>
-                          <Badge variant="outline">{report.category}</Badge>
+                          <Badge variant="neutral">{report.category}</Badge>
                         </div>
                       </div>
                     </div>
@@ -610,10 +610,10 @@ export default function ReportsPage() {
                             </>
                           )}
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="neutral" size="sm">
                           <Download className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="neutral" size="sm">
                           <Calendar className="h-4 w-4" />
                         </Button>
                       </div>
@@ -756,7 +756,7 @@ export default function ReportsPage() {
                     <p className="text-sm text-gray-500">Personaliza los detalles del reporte</p>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline">
+                    <Button variant="neutral">
                       <FileText className="h-4 w-4 mr-2" />
                       Previsualizar
                     </Button>
@@ -821,11 +821,11 @@ export default function ReportsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">{report.type}</Badge>
-                      <Button variant="outline" size="sm">
+                      <Badge variant="default">{report.type}</Badge>
+                      <Button variant="neutral" size="sm">
                         <FileText className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="neutral" size="sm">
                         <Download className="h-4 w-4" />
                       </Button>
                     </div>
@@ -920,10 +920,10 @@ export default function ReportsPage() {
                           <Badge variant={report.status === "active" ? "default" : "neutral"}>
                             {report.status === "active" ? "Activo" : "Pausado"}
                           </Badge>
-                          <Button variant="outline" size="sm">
+                          <Button variant="neutral" size="sm">
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button variant="neutral" size="sm">
                             {report.status === "active" ? "Pausar" : "Activar"}
                           </Button>
                         </div>

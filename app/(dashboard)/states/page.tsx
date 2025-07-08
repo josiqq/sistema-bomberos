@@ -498,7 +498,7 @@ export default function StatesPage() {
                     className="pl-10 w-64"
                   />
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="neutral" size="sm">
                   <Filter className="h-4 w-4 mr-2" />
                   Filtros
                 </Button>
@@ -553,7 +553,7 @@ export default function StatesPage() {
                               <Dialog>
                                 <DialogTrigger asChild>
                                   <Button
-                                    variant="outline"
+                                    variant="neutral"
                                     size="sm"
                                     onClick={() => setSelectedEquipment(equipment)}
                                   >
@@ -570,10 +570,10 @@ export default function StatesPage() {
                                   <StateChangeForm equipment={equipment} />
                                 </DialogContent>
                               </Dialog>
-                              <Button variant="outline" size="sm">
+                              <Button variant="neutral" size="sm">
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button variant="neutral" size="sm">
                                 <History className="h-4 w-4" />
                               </Button>
                             </div>

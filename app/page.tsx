@@ -128,15 +128,15 @@ export default function Dashboard() {
                     <Plus className="h-4 w-4 mr-2" />
                     Agregar Equipo
                   </Button>
-                  <Button className="w-full justify-start bg-transparent" variant="outline" size="sm">
+                  <Button className="w-full justify-start bg-transparent" variant="neutral" size="sm">
                     <Calendar className="h-4 w-4 mr-2" />
                     Programar Mantenimiento
                   </Button>
-                  <Button className="w-full justify-start bg-transparent" variant="outline" size="sm">
+                  <Button className="w-full justify-start bg-transparent" variant="neutral" size="sm">
                     <Users className="h-4 w-4 mr-2" />
                     Asignar Equipos
                   </Button>
-                  <Button className="w-full justify-start bg-transparent" variant="outline" size="sm">
+                  <Button className="w-full justify-start bg-transparent" variant="neutral" size="sm">
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Ver Reportes
                   </Button>

@@ -490,10 +490,10 @@ export default function SettingsPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm">
+                              <Button variant="neutral" size="sm">
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                              <Button variant="neutral" size="sm" className="text-red-600 hover:text-red-700">
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
@@ -602,10 +602,10 @@ export default function SettingsPage() {
                             <TableCell>{new Date(user.lastAccess).toLocaleDateString()}</TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
-                                <Button variant="outline" size="sm">
+                                <Button variant="neutral" size="sm">
                                   <Edit className="h-4 w-4" />
                                 </Button>
-                                <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                                <Button variant="neutral" size="sm" className="text-red-600 hover:text-red-700">
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
@@ -813,10 +813,10 @@ export default function SettingsPage() {
                             <p className="text-xs text-gray-500">{backup.size}</p>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
+                            <Button variant="neutral" size="sm">
                               <Download className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Button variant="neutral" size="sm">
                               Restaurar
                             </Button>
                           </div>
@@ -832,15 +832,15 @@ export default function SettingsPage() {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Exportación de Datos</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button variant="outline" className="flex items-center gap-2 bg-transparent">
+                  <Button variant="neutral" className="flex items-center gap-2 bg-transparent">
                     <Download className="h-4 w-4" />
                     Exportar Inventario
                   </Button>
-                  <Button variant="outline" className="flex items-center gap-2 bg-transparent">
+                  <Button variant="neutral" className="flex items-center gap-2 bg-transparent">
                     <Download className="h-4 w-4" />
                     Exportar Mantenimientos
                   </Button>
-                  <Button variant="outline" className="flex items-center gap-2 bg-transparent">
+                  <Button variant="neutral" className="flex items-center gap-2 bg-transparent">
                     <Download className="h-4 w-4" />
                     Exportar Reportes
                   </Button>
@@ -912,15 +912,15 @@ export default function SettingsPage() {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Mantenimiento del Sistema</h3>
                 <div className="space-y-4">
-                  <Button variant="outline" className="w-full bg-transparent">
+                  <Button variant="neutral" className="w-full bg-transparent">
                     <Database className="h-4 w-4 mr-2" />
                     Optimizar Base de Datos
                   </Button>
-                  <Button variant="outline" className="w-full bg-transparent">
+                  <Button variant="neutral" className="w-full bg-transparent">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Limpiar Archivos Temporales
                   </Button>
-                  <Button variant="outline" className="w-full text-red-600 hover:text-red-700 bg-transparent">
+                  <Button variant="neutral" className="w-full text-red-600 hover:text-red-700 bg-transparent">
                     <AlertCircle className="h-4 w-4 mr-2" />
                     Restablecer Configuración
                   </Button>

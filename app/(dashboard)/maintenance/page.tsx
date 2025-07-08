@@ -21,7 +21,6 @@ const statusIcons = {
 }
 
 export default function MaintenancePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
 
   const upcomingMaintenances = maintenanceData.filter(

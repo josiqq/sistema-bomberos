@@ -257,7 +257,6 @@ const inspectionTrend = [
 ]
 
 export default function InspectionsPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [selectedInspection, setSelectedInspection] = useState<InspectionSchedule | null>(null)
   const [inspectionModal, setInspectionModal] = useState(false)
@@ -381,7 +380,7 @@ export default function InspectionsPage() {
         </TabsList>
 
         <TabsContent value="calendar" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
             {/* Calendar */}
             <Card className="lg:col-span-1">
               <CardHeader>
@@ -390,13 +389,15 @@ export default function InspectionsPage() {
                   Calendario
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="rounded-md border"
-                />
+              <CardContent className="p-4">
+                <div className="flex justify-center">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    className="rounded-md border w-full max-w-none"
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -454,7 +455,7 @@ export default function InspectionsPage() {
                           <Badge className={getStatusColor(inspection.status)}>{inspection.status}</Badge>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
+                              <Button variant="neutral" size="sm">
                                 <Eye className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
@@ -525,10 +526,10 @@ export default function InspectionsPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm">
+                              <Button variant="neutral" size="sm">
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button variant="neutral" size="sm">
                                 <Edit className="h-4 w-4" />
                               </Button>
                             </div>
@@ -602,14 +603,14 @@ export default function InspectionsPage() {
                         <TableCell className="text-sm">{cert.issuingAuthority}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
+                            <Button variant="neutral" size="sm">
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Button variant="neutral" size="sm">
                               <Download className="h-4 w-4" />
                             </Button>
                             {cert.status === "expiring" || cert.status === "expired" ? (
-                              <Button variant="outline" size="sm" className="text-blue-600">
+                              <Button variant="neutral" size="sm" className="text-blue-600">
                                 Renovar
                               </Button>
                             ) : null}
@@ -800,7 +801,7 @@ function InspectionExecutionForm({
                     rows={2}
                   />
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="neutral" size="sm">
                   <Camera className="h-4 w-4" />
                 </Button>
               </div>
@@ -844,7 +845,7 @@ function InspectionExecutionForm({
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <Camera className="h-8 w-8 mx-auto mb-2 text-gray-400" />
               <p className="text-sm text-gray-500">Arrastra archivos aquí o haz clic para seleccionar</p>
-              <Button variant="outline" size="sm" className="mt-2 bg-transparent">
+              <Button variant="neutral" size="sm" className="mt-2 bg-transparent">
                 Seleccionar Archivos
               </Button>
             </div>
@@ -854,7 +855,7 @@ function InspectionExecutionForm({
 
       {/* Action Buttons */}
       <div className="flex justify-end gap-2 pt-4 border-t">
-        <Button variant="outline">Guardar Borrador</Button>
+        <Button variant="neutral">Guardar Borrador</Button>
         <Button disabled={!inspectionResult} className="bg-blue-600 hover:bg-blue-700">
           Completar Inspección
         </Button>
